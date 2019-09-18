@@ -23,13 +23,19 @@ function _ExecuteCore {
 }
 
 function Execute-SelectedTasks {
-    param([Parameter(ValueFromPipeline=$true)]$SelectedTasks)
+    param(
+        [Parameter(ValueFromPipeline=$true)]$SelectedTasks,
+        [PSCredential]$Credential
+    )
 
-    _ExecuteCore { param($hostname) RemoteDispatch-MultipleTasks -Hostname $hostname -Tasks $SelectedTasks } -TaskName $SelectedTasks
+    _ExecuteCore { param($hostname) RemoteDispatch-MultipleTasks -Hostname $hostname -Credential $Credential -Tasks $SelectedTasks } -TaskName $SelectedTasks
 }
 
 function Execute-SelectedCommand {
-    param([Parameter(ValueFromPipeline=$true)]$Code)
+    param(
+        [Parameter(ValueFromPipeline=$true)]$Code,
+        [PSCredential]$Credential
+    )
 
-    _ExecuteCore { param($hostname) RemoteDispatch-RawCommand -Hostname $hostname -Command $Code } -TaskName "raw-cmd"
+    _ExecuteCore { param($hostname) RemoteDispatch-RawCommand -Hostname $hostname -Credential $Credential -Command $Code } -TaskName "raw-cmd"
 }

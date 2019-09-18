@@ -7,6 +7,7 @@ Load-Tasks -Directory $PSScriptRoot\tasks
 Load-Hosts -File $PSScriptRoot\hosts
 
 $script:selectedTasks = @( "hostname" )
+$script:impersonatedCreds = $null
 
 function Process-Input {
     $choice = Read-Host -Prompt "Selection"
@@ -61,19 +62,25 @@ function Process-Input {
                 Write-Red "Task $_ does not exist"
             }
         }
-    } elseif ($choice -eq "6" -or $choice -match "^exe" -or $choice -eq "run") {
+    } elseif ($choice -eq "6") {
+        # Impersonate user
+        $creds = Get-Credential -ErrorAction SilentlyContinue
+        if ($creds -ne $null) {
+            $script:impersonatedCreds = $creds
+        }
+    } elseif ($choice -eq "7" -or $choice -match "^exe" -or $choice -eq "run") {
         # Kick off tasks
-        Execute-SelectedTasks -SelectedTasks $script:selectedTasks
-    } elseif ($choice -eq "7" -or $choice -eq "raw") {
+        Execute-SelectedTasks -Credential $script:impersonatedCreds -SelectedTasks $script:selectedTasks
+    } elseif ($choice -eq "8" -or $choice -eq "raw") {
         # This prompts for and runs a block of code from stdin
         $code =
-        Execute-SelectedCommand -Code (Read-Host -Prompt "Cmd")
+        Execute-SelectedCommand -Credential $script:impersonatedCreds -Code (Read-Host -Prompt "Cmd")
     }
 }
 
 # Loop forever until user quit
 while (1) {
-    Write-Header $script:selectedTasks
+    Write-Header -SelectedTasks $script:selectedTasks -ImpersonatedUser $script:impersonatedCreds.UserName
     Write-Menu
     Process-Input
 }

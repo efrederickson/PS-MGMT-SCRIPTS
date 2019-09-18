@@ -5,17 +5,25 @@
 function _RemoteDispatchCore {
     param(
         [parameter(Mandatory=$true)]$Hostname,
-        [parameter(Mandatory=$true)]$Blocks
+        [parameter(Mandatory=$true)]$Blocks,
+        [PSCredential]$Credential
     )
 
     # This runs the block that kicks off the tasks on the remote hosts. 
     # The tasks are passed in as arguments and then turned (back) into ScriptBlock's and run. 
-    Invoke-Command -ComputerName $Hostname -ScriptBlock {
+
+    $block = {
         foreach ($blk in $args) {
             # Run the actual task on the target computer
             Invoke-Command -ScriptBlock ([System.Management.Automation.ScriptBlock]::Create($blk))
         }
-    } -AsJob -ErrorVariable err -ArgumentList $Blocks | Out-Null
+    }
+
+    if ($Credential -ne $null) {
+        Invoke-Command -ComputerName $Hostname -Credential $Credential -ScriptBlock $block -AsJob -ErrorVariable err -ArgumentList $Blocks | Out-Null
+    } else {
+        Invoke-Command -ComputerName $Hostname -ScriptBlock $block -AsJob -ErrorVariable err -ArgumentList $Blocks | Out-Null
+    }
 
     # If an error occured say so. 
     if ($err -ne $null) {
@@ -26,17 +34,19 @@ function _RemoteDispatchCore {
 function RemoteDispatch-Task {
     param(
         [parameter(Mandatory=$true)]$Hostname,
-        [parameter(Mandatory=$true)]$Task
+        [parameter(Mandatory=$true)]$Task,
+        [PSCredential]$Credential
     )
 
     $taskBlock = Get-InvokableTask -Name $Task
-    _RemoteDispatchCore -Hostname $Hostname -Blocks @( taskBlock )
+    _RemoteDispatchCore -Hostname $Hostname -Credential $Credential -Blocks @( taskBlock )
 }
 
 function RemoteDispatch-MultipleTasks {
     param(
         [parameter(Mandatory=$true)]$Hostname,
-        [parameter(Mandatory=$true)]$Tasks
+        [parameter(Mandatory=$true)]$Tasks,
+        [PSCredential]$Credential
     )
 
     # Create a list of script blocks
@@ -50,7 +60,7 @@ function RemoteDispatch-MultipleTasks {
     # what happened until running "gpdupate reboot" caused them to reboot immediately. So now hosts are parallelized while tasks are not. 
     # At some point it may be worth adding flags to tasks for things like "destructiveActionCost", "needsReboot", runOrder, canRunParallel, etc
 
-    _RemoteDispatchCore -Hostname $Hostname -Blocks $blocks
+    _RemoteDispatchCore -Hostname $Hostname -Credential $Credential -Blocks $blocks
 }
 
 function RemoteDispatch-RawCommand {
@@ -58,5 +68,5 @@ function RemoteDispatch-RawCommand {
         [parameter(Mandatory=$true)]$Hostname,
         [parameter(Mandatory=$true)]$Command
     )
-    _RemoteDispatchCore -Hostname $Hostname -Blocks @( $Command )
+    _RemoteDispatchCore -Hostname $Hostname -Credential $Credential -Blocks @( $Command )
 }
