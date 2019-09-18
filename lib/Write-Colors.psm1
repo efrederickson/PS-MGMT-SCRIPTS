@@ -4,7 +4,7 @@ function _Write-Common {
     )
 
     $args | % {
-        Write-Host -ForegroundColor $ForegroundColor $_
+        Write-Host -ForegroundColor $ForegroundColor '[*]' $_
     }
 }
 
