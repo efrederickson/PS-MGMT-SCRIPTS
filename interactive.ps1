@@ -66,12 +66,18 @@ function Process-Input {
         # Impersonate user
         $creds = Get-Credential -ErrorAction SilentlyContinue
         if ($creds -ne $null) {
+            Write-Green "Using credentials for" $creds.Username
             $script:impersonatedCreds = $creds
         }
-    } elseif ($choice -eq "7" -or $choice -match "^exe" -or $choice -eq "run") {
+    } elseif ($choice -eq "7") {
+        if ($script:impersonatedCreds -ne $null) {
+            Write-Green "Dropped credentials"
+            $script:impersonatedCreds = $null
+        }
+    } elseif ($choice -eq "8" -or $choice -match "^exe" -or $choice -eq "run") {
         # Kick off tasks
         Execute-SelectedTasks -Credential $script:impersonatedCreds -SelectedTasks $script:selectedTasks
-    } elseif ($choice -eq "8" -or $choice -eq "raw") {
+    } elseif ($choice -eq "9" -or $choice -eq "raw") {
         # This prompts for and runs a block of code from stdin
         $code =
         Execute-SelectedCommand -Credential $script:impersonatedCreds -Code (Read-Host -Prompt "Cmd")

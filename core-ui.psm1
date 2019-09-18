@@ -27,6 +27,7 @@ function Write-Header {
     Display-Tasks -SelectedTasks $SelectedTasks
 
     if ($ImpersonatedUser -ne $null) {
+        Write-Host ""
         Write-Host "Impersonated user: $ImpersonatedUser"
     }
 }
@@ -40,8 +41,9 @@ Write-Host ""
     Write-Host "3) Add task"
     Write-Host "4) Remove task"
     Write-Host "5) Set tasks"
-    write-host "6) Impersonate User"
-    write-host "7) Execute tasks on hosts (exe*, run)"
-    Write-Host "8) Run raw command (raw)"
+    Write-Host "6) Impersonate User"
+    Write-Host "7) Stop impersonating user"
+    write-host "8) Execute tasks on hosts (exe*, run)"
+    Write-Host "9) Run raw command (raw)"
     Write-Host ""
 }
