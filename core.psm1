@@ -10,6 +10,7 @@ function _ExecuteCore {
         Write-Yellow "Dispatching job(s) $TaskName to $_" 
         Invoke-Command -ScriptBlock $block -ArgumentList $_
     }
+    
     Write-Host Waiting for jobs to complete...
     Write-Host ""
 
