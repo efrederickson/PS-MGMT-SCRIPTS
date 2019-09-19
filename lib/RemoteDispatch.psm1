@@ -15,7 +15,19 @@ function _RemoteDispatchCore {
     $block = {
         foreach ($blk in $args) {
             # Run the actual task on the target computer
-            Invoke-Command -ScriptBlock ([System.Management.Automation.ScriptBlock]::Create($blk))
+
+            $blk = "try { " + $blk + " } catch { return '__internal_psmgmtdispatch_failed_' + `$_  }"
+
+            $res = Invoke-Command -ScriptBlock ([System.Management.Automation.ScriptBlock]::Create($blk))
+
+            if ($res -ne $null) {
+                $res = $res.ToString()
+                if ($res.StartsWith("__internal_psmgmtdispatch_failed_")) {
+                    throw ($res -replace "__internal_psmgmtdispatch_failed_","")
+                } else {
+                    Write-Host $res
+                }
+            }
         }
     }
 
