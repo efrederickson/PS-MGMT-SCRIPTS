@@ -1,6 +1,5 @@
 ﻿# Automatically process tasks to run
 
-Import-Module -DisableNameChecking -Force $PSScriptRoot\core.psm1
 Import-Module -Force $PSScriptRoot\lib\common.psm1
 Expand-RelativeLibPaths hosts RemoteDispatch tasks threading Write-Colors | % { Import-Module -DisableNameChecking -Force $_ }
 

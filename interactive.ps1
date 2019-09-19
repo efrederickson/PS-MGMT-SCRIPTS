@@ -1,5 +1,4 @@
-﻿Import-Module -DisableNameChecking -Force $PSScriptRoot\core.psm1
-Import-Module -DisableNameChecking -Force $PSScriptRoot\core-ui.psm1
+﻿Import-Module -DisableNameChecking -Force $PSScriptRoot\core-ui.psm1
 Import-Module -DisableNameChecking -Force $PSScriptRoot\lib\common.psm1
 Expand-RelativeLibPaths hosts RemoteDispatch tasks threading Write-Colors | % { Import-Module -DisableNameChecking -Force $_ }
 

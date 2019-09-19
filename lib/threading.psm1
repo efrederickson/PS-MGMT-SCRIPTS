@@ -4,7 +4,7 @@
 function Process-Job {
     param([System.Management.Automation.Job]$Job)
 
-    #Write-Yellow Processing job $Job.Name
+    Write-Yellow Processing job $Job.Name
 
     Receive-Job -Job $Job | Write-Host
     Remove-Job -Job $Job
