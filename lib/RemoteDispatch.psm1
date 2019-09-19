@@ -27,7 +27,7 @@ function _RemoteDispatchCore {
 
     # If an error occured say so. 
     if ($err -ne $null) {
-        Write-Error "Error while remotely invoking command:" $err "for host:" $Hostname
+        throw ("Error while remotely invoking command:" + $err + "for host:" + $Hostname)
     }
 }
 
