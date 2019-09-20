@@ -103,7 +103,7 @@ function _ExecuteCore {
     $taskRes = WaitFor-Jobs
     Write-Host ""
     if ($taskCount -eq $taskRes) {
-        Write-Green "$taskCount tasks completed successfully."
+        Write-Green "$taskRes/$taskCount tasks completed successfully."
     } else {
         Write-Red "$taskRes/$taskCount tasks completed successfully."
     }
