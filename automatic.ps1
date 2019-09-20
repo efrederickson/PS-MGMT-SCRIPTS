@@ -1,8 +1,9 @@
 ﻿# Automatically process tasks to run
 
+[CmdletBinding(PositionalBinding=$false)]
 param(
     [Parameter(ValueFromPipeline=$true,ValueFromRemainingArguments=$true)]$Tasks,
-    $Hosts
+    [Parameter(ValueFromPipeline=$false)]$Hosts
 )
 
 Import-Module -DisableNameChecking -Force $PSScriptRoot\core-ui.psm1
