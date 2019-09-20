@@ -28,7 +28,7 @@ function Write-Header {
 
     if ($ImpersonatedUser -ne $null) {
         Write-Host ""
-        Write-Host "Impersonated user: $ImpersonatedUser"
+        Write-Host "Run-as user: $ImpersonatedUser"
     }
 }
 
@@ -41,8 +41,8 @@ Write-Host ""
     Write-Host "3) Add task"
     Write-Host "4) Remove task"
     Write-Host "5) Set tasks"
-    Write-Host "6) Impersonate User"
-    Write-Host "7) Stop impersonating user"
+    Write-Host "6) Set run-as user"
+    Write-Host "7) Unset run-as user"
     write-host "8) Execute tasks on hosts (exe*, run)"
     Write-Host "9) Run raw command (raw)"
     Write-Host ""
