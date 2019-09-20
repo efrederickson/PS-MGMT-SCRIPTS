@@ -26,4 +26,9 @@ function Remove-Host {
     $script:hosts = $script:hosts -ne $HostName
 }
 
+function Set-Hosts {
+    param([Parameter(Mandatory=$true)]$Hosts)
+    $script:hosts = $Hosts
+}
+
 Export-ModuleMember *-*

@@ -1,22 +1,38 @@
 ﻿# Automatically process tasks to run
 
+param(
+    [Parameter(ValueFromPipeline=$true,ValueFromRemainingArguments=$true)]$Tasks,
+    $Hosts
+)
+
+Import-Module -DisableNameChecking -Force $PSScriptRoot\core-ui.psm1
 Import-Module -Force $PSScriptRoot\lib\common.psm1
 Expand-RelativeLibPaths hosts RemoteDispatch tasks threading Write-Colors | % { Import-Module -DisableNameChecking -Force $_ }
 
 Load-Tasks -Directory $PSScriptRoot\tasks
-Load-Hosts -File $PSScriptRoot\hosts
+
+if ($Hosts -ne $null -and $Hosts.Count -gt 0) {
+    Set-Hosts -Hosts $Hosts
+} else {
+    Load-Hosts -File $PSScriptRoot\hosts
+}
 
 # set tasks & verify tasks
 $script:selectedTasks = @( )
 
-$args | % {
-    if ((Get-TaskNames).contains($_)) {
+$Tasks | % {
+    if ($_ -ne $null -and $_.Length -gt 0 -and (Get-TaskNames).contains($_)) {
         Write-Green "Adding task $_"
         $script:selectedTasks += $_
-    } else {
+    } elseif ($_ -ne $null -and $_.Length -gt 0) {
         Write-Red "Task $_ does not exist"
         exit 1
     }
 }
 
-Execute-SelectedTasks -SelectedTasks $script:selectedTasks
+if ($script:selectedTasks.Count -gt 0) {
+    Write-Header -SelectedTasks $script:selectedTasks
+    Execute-SelectedTasks -SelectedTasks $script:selectedTasks
+} else {
+    Write-Red "No tasks selected"
+}
