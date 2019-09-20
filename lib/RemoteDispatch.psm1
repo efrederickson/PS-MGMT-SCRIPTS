@@ -21,11 +21,15 @@ function _RemoteDispatchCore {
             $res = Invoke-Command -ScriptBlock ([System.Management.Automation.ScriptBlock]::Create($blk))
 
             if ($res -ne $null) {
-                $res = $res.ToString()
-                if ($res.StartsWith("__internal_psmgmtdispatch_failed_")) {
+                #$res = $res.ToString()
+                if ($res.ToString().StartsWith("__internal_psmgmtdispatch_failed_")) {
                     throw ($res -replace "__internal_psmgmtdispatch_failed_","")
                 } else {
-                    Write-Host $res
+                    if ($res -is [System.Array]) {
+                        $res | % { Write-Host $_ }
+                    } else {
+                        Write-Host $res.ToString()
+                    }
                 }
             }
         }
