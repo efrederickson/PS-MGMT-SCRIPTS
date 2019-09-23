@@ -1,3 +1,4 @@
 New-Task -Name whoami -ScriptBlock {
-    whoami
+    #whoami
+    return [system.Environment]::UserDomainName + "\" + [System.Environment]::UserName
 }
