@@ -1,6 +1,6 @@
 ﻿Import-Module -DisableNameChecking -Force $PSScriptRoot\core-ui.psm1
 Import-Module -DisableNameChecking -Force $PSScriptRoot\lib\common.psm1
-Expand-RelativeLibPaths hosts RemoteDispatch tasks threading Write-Colors | % { Import-Module -DisableNameChecking -Force $_ }
+Expand-RelativeLibPaths hosts RemoteDispatch tasks threading Write-Colors | ForEach-Object { Import-Module -DisableNameChecking -Force $_ }
 
 Load-Tasks -Directory $PSScriptRoot\tasks
 Load-Hosts -File $PSScriptRoot\hosts
@@ -53,7 +53,7 @@ function Process-Input {
         # Easier than removing/adding a whole list of tasks.
         $selTasks = Read-Host -Prompt "Tasks to set"
         $script:selectedTasks = @( )
-        $selTasks -split " " | % {
+        $selTasks -split " " | ForEach-Object {
             if ((Get-TaskNames).contains($_)) {
                 Write-Green "Adding task $_"
                 $script:selectedTasks += $_
@@ -78,7 +78,6 @@ function Process-Input {
         Execute-SelectedTasks -Credential $script:impersonatedCreds -SelectedTasks $script:selectedTasks
     } elseif ($choice -eq "9" -or $choice -eq "raw") {
         # This prompts for and runs a block of code from stdin
-        $code =
         Execute-SelectedCommand -Credential $script:impersonatedCreds -Code (Read-Host -Prompt "Cmd")
     }
 }
