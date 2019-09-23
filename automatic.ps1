@@ -6,9 +6,8 @@ param(
     [Parameter(ValueFromPipeline=$false)]$Hosts
 )
 
-Import-Module -DisableNameChecking -Force $PSScriptRoot\core-ui.psm1
 Import-Module -Force $PSScriptRoot\lib\common.psm1
-Expand-RelativeLibPaths hosts RemoteDispatch tasks threading Write-Colors | % { Import-Module -DisableNameChecking -Force $_ }
+Expand-RelativeLibPaths core-ui hosts RemoteDispatch tasks threading Write-Colors | % { Import-Module -DisableNameChecking -Force $_ }
 
 Load-Tasks -Directory $PSScriptRoot\tasks
 
