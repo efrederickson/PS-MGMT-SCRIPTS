@@ -5,10 +5,10 @@ New-Task -Name vscode -ScriptBlock {
     net use X: "\\ad\acdc utt" /user:student password
 
     # Run installer
-    x:\VSCodeUserSetup-x64-1.38.1.exe /verysilent
+    x:\Installers\VSCodeVSCodeUserSetup-x64-1.38.1.exe /verysilent
 
     # Wait for installer (since it detaches from console)
-    PS C:\Users\Administrator.AD1> while (Get-Process -Name "VSCodeUserSetup-x64-1.38.1" -ErrorAction SilentlyContinue) { 
+    while (Get-Process -Name "VSCodeUserSetup-x64-1.38.1" -ErrorAction SilentlyContinue) { 
         Start-Sleep -Seconds 5 
     }
 
